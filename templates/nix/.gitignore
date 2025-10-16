@@ -1,0 +1,13 @@
+# Nix
+result
+result-*
+.direnv/
+.envrc.cache
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
