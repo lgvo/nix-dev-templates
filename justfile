@@ -10,10 +10,6 @@ list-shells:
   @echo "  default      - Nix development"
   @echo "  python       - Python only"
   @echo "  nix          - Nix only"
-  @echo "  python-full  - Python with full tooling"
-  @echo "  fullstack    - Python + Nix"
-  @echo "  automation   - All automation tools"
-  @echo "  python-automation - Python + Just + Maven"
 
 # Enter a specific dev shell
 dev shell="default":

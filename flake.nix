@@ -25,7 +25,7 @@
           default = self.lib.${system}.mkDevShell {
             automation.just.enable = true;
 
-            nix = {
+            lang.nix = {
               enable = true;
               formatter = "alejandra";
               withStatix = true;
@@ -33,16 +33,16 @@
           };
 
           python = self.lib.${system}.mkDevShell {
-            python.enable = true;
+            lang.python.enable = true;
           };
 
           nix = self.lib.${system}.mkDevShell {
-            nix.enable = true;
+            lang.nix.enable = true;
           };
 
           # Python with full tooling
           python-full = self.lib.${system}.mkDevShell {
-            python = {
+            lang.python = {
               enable = true;
               lsp = true;
               formatter = true;

@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.python;
+  cfg = config.lang.python;
 
   # Map version strings to nixpkgs python packages
   pythonVersions = {
@@ -16,7 +16,7 @@
     "latest" = pkgs.python313;
   };
 in {
-  options.python = {
+  options.lang.python = {
     enable = lib.mkEnableOption "Python development environment";
 
     version = lib.mkOption {
@@ -84,7 +84,7 @@ in {
     };
   };
 
-  config.python = lib.mkIf cfg.enable {
+  config.lang.python = lib.mkIf cfg.enable {
     packages = lib.flatten [
       cfg.package
       (lib.optional cfg.withUv pkgs.uv)

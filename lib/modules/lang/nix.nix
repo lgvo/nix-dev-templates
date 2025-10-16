@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.nix;
+  cfg = config.lang.nix;
 in {
-  options.nix = {
+  options.lang.nix = {
     enable = lib.mkEnableOption "Nix development tools";
 
     lsp = lib.mkOption {
@@ -59,7 +59,7 @@ in {
     };
   };
 
-  config.nix = lib.mkIf cfg.enable {
+  config.lang.nix = lib.mkIf cfg.enable {
     packages = lib.flatten [
       (lib.optional (cfg.lsp == "nil") pkgs.nil)
       (lib.optional (cfg.lsp == "nixd") pkgs.nixd)

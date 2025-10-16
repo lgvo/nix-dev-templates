@@ -4,8 +4,7 @@
   # Import all language modules
   modules = [
     ./modules/automation
-    ./modules/python.nix
-    ./modules/nix.nix
+    ./modules/lang
   ];
 
   # Evaluate the module system
@@ -22,16 +21,16 @@
 
   # Collect all packages from enabled languages
   allPackages = lib.flatten [
-    [cfg.automation.packages]
-    (lib.optionals cfg.python.enable cfg.python.packages)
-    (lib.optionals cfg.nix.enable cfg.nix.packages)
+    cfg.lang.packages
+    cfg.automation.packages
   ];
 
   # Collect all shell hooks
   allShellHooks = lib.concatStringsSep "\n" (
-    [cfg.automation.shellHook]
-    ++ lib.optionals cfg.python.enable [cfg.python.shellHook]
-    ++ lib.optionals cfg.nix.enable [cfg.nix.shellHook]
+    [
+      cfg.automation.shellHook
+      cfg.lang.shellHook
+    ]
   );
 in
   pkgs.mkShell {
@@ -41,7 +40,5 @@ in
       ${allShellHooks}
 
       echo "🚀 Development environment ready!"
-      ${lib.optionalString cfg.python.enable "echo \"  ✓ Python ${cfg.python.package.version}\""}
-      ${lib.optionalString cfg.nix.enable "echo \"  ✓ Nix tooling\""}
     '';
   }
