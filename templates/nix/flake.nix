@@ -9,18 +9,20 @@
     };
   };
 
-  outputs = { self, nixpkgs, dev-templates }:
-    let
-      system = builtins.currentSystem;
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      devShells.${system}.default = dev-templates.lib.${system}.mkDevShell {
-        nix = {
-          enable = true;
-          lsp = "nil";
-          formatter = "nixpkgs-fmt";
-        };
+  outputs = {
+    self,
+    nixpkgs,
+    dev-templates,
+  }: let
+    system = builtins.currentSystem;
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
+    devShells.${system}.default = dev-templates.lib.${system}.mkDevShell {
+      nix = {
+        enable = true;
+        lsp = "nil";
+        formatter = "nixpkgs-fmt";
       };
     };
+  };
 }

@@ -9,17 +9,19 @@
     };
   };
 
-  outputs = { self, nixpkgs, dev-templates }:
-    let
-      system = builtins.currentSystem;
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      devShells.${system}.default = dev-templates.lib.${system}.mkDevShell {
-        python = {
-          enable = true;
-          withUv = true;
-        };
+  outputs = {
+    self,
+    nixpkgs,
+    dev-templates,
+  }: let
+    system = builtins.currentSystem;
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
+    devShells.${system}.default = dev-templates.lib.${system}.mkDevShell {
+      python = {
+        enable = true;
+        withUv = true;
       };
     };
+  };
 }
