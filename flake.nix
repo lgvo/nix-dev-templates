@@ -4,12 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
   };
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
+    nix-ai-tools
   }:
     (flake-utils.lib.eachDefaultSystem (
       system: let
@@ -17,13 +19,17 @@
       in {
         # Export the lib for other flakes to use
         lib = {
-          mkDevShell = import ./lib/mk-dev-shell.nix {inherit pkgs;};
+          mkDevShell = import ./lib/mk-dev-shell.nix {
+            inherit pkgs nix-ai-tools;
+          };
         };
 
         # Example dev shells for testing this flake directly
         devShells = {
           default = self.lib.${system}.mkDevShell {
             automation.just.enable = true;
+
+            assistant.opencode.enable = true;
 
             lang.nix = {
               enable = true;

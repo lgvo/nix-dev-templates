@@ -1,10 +1,11 @@
-{pkgs}: config: let
+{pkgs, nix-ai-tools}: config: let
   inherit (pkgs) lib;
 
   # Import all language modules
   modules = [
-    ./modules/automation
     ./modules/lang
+    ./modules/automation
+    ./modules/assistant
   ];
 
   # Evaluate the module system
@@ -12,7 +13,7 @@
     modules =
       modules
       ++ [
-        {_module.args = {inherit pkgs;};}
+        {_module.args = {inherit pkgs nix-ai-tools;};}
         config
       ];
   };
@@ -23,13 +24,15 @@
   allPackages = lib.flatten [
     cfg.lang.packages
     cfg.automation.packages
+    cfg.assistant.packages
   ];
 
   # Collect all shell hooks
   allShellHooks = lib.concatStringsSep "\n" (
     [
-      cfg.automation.shellHook
       cfg.lang.shellHook
+      cfg.automation.shellHook
+      cfg.assistant.shellHook
     ]
   );
 in
