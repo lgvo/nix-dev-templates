@@ -19,6 +19,15 @@
 
         # Example dev shells for testing this flake directly
         devShells = {
+
+          default = self.lib.${system}.mkDevShell {
+            nix = {
+              enable = true;
+              formatter = "alejandra";
+              withStatix = true;
+            };
+          };
+
           python = self.lib.${system}.mkDevShell {
             python.enable = true;
           };
