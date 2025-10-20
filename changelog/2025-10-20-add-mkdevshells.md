@@ -18,12 +18,13 @@ Added a new `mkDevShells` function that automatically creates dev shells for all
 
 **Usage:**
 ```nix
-outputs = { nixpkgs, dev-templates, ... }:
-  dev-templates.lib.mkDevShells {
+outputs = { nixpkgs, dev-templates, ... }: {
+  devShells = dev-templates.lib.mkDevShells {
     config = {
       lang.python.enable = true;
     };
   };
+};
 ```
 
 ### AGENTS.md - Guidelines for AI Coding Agents
@@ -84,9 +85,9 @@ Both `templates/python` and `templates/nix` now use the simpler `mkDevShells` ap
 ### For New Projects
 Use `mkDevShells` (recommended):
 ```nix
-dev-templates.lib.mkDevShells {
+devShells = dev-templates.lib.mkDevShells {
   config = { lang.python.enable = true; };
-}
+};
 ```
 
 ### For Existing Projects

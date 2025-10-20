@@ -54,8 +54,8 @@ nix develop
     };
   };
 
-  outputs = { nixpkgs, dev-templates, ... }:
-    dev-templates.lib.mkDevShells {
+  outputs = { nixpkgs, dev-templates, ... }: {
+    devShells = dev-templates.lib.mkDevShells {
       config = {
         lang.python = {
           enable = true;
@@ -65,6 +65,7 @@ nix develop
         };
       };
     };
+  };
 }
 ```
 
@@ -134,7 +135,7 @@ lang.nix = {
 ### Python Web Development
 
 ```nix
-dev-templates.lib.mkDevShells {
+devShells = dev-templates.lib.mkDevShells {
   config = {
     lang.python = {
       enable = true;
@@ -144,13 +145,13 @@ dev-templates.lib.mkDevShells {
       withUv = true;
     };
   };
-}
+};
 ```
 
 ### Nix Package Development
 
 ```nix
-dev-templates.lib.mkDevShells {
+devShells = dev-templates.lib.mkDevShells {
   config = {
     lang.nix = {
       enable = true;
@@ -160,13 +161,13 @@ dev-templates.lib.mkDevShells {
       withDeadnix = true;
     };
   };
-}
+};
 ```
 
 ### Multi-Language Project
 
 ```nix
-dev-templates.lib.mkDevShells {
+devShells = dev-templates.lib.mkDevShells {
   config = {
     lang.python = {
       enable = true;
@@ -178,7 +179,7 @@ dev-templates.lib.mkDevShells {
       formatter = "alejandra";
     };
   };
-}
+};
 ```
 
 ## Available Templates

@@ -16,6 +16,5 @@
         value.default = mkDevShellForSystem system;
       })
       systems);
-in {
-  inherit devShells;
-}
+in
+  devShells

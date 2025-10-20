@@ -13,8 +13,8 @@
     nixpkgs,
     dev-templates,
     ...
-  }:
-    dev-templates.lib.mkDevShells {
+  }: {
+    devShells = dev-templates.lib.mkDevShells {
       config = {
         lang.nix = {
           enable = true;
@@ -23,4 +23,5 @@
         };
       };
     };
+  };
 }
