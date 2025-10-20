@@ -1,4 +1,7 @@
-{pkgs, nix-ai-tools}: config: let
+{
+  pkgs,
+  nix-ai-tools,
+}: config: let
   inherit (pkgs) lib;
 
   # Import all language modules
@@ -28,13 +31,11 @@
   ];
 
   # Collect all shell hooks
-  allShellHooks = lib.concatStringsSep "\n" (
-    [
-      cfg.lang.shellHook
-      cfg.automation.shellHook
-      cfg.assistant.shellHook
-    ]
-  );
+  allShellHooks = lib.concatStringsSep "\n" [
+    cfg.lang.shellHook
+    cfg.automation.shellHook
+    cfg.assistant.shellHook
+  ];
 in
   pkgs.mkShell {
     buildInputs = allPackages;

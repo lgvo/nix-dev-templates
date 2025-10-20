@@ -42,7 +42,35 @@ nix develop
 
 ### Using as a Library
 
-Add to your existing project's `flake.nix`:
+#### Simple Cross-Platform (Recommended)
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    dev-templates = {
+      url = "github:lgvo/nix-dev-templates";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { nixpkgs, dev-templates, ... }:
+    dev-templates.lib.mkDevShells {
+      config = {
+        lang.python = {
+          enable = true;
+          version = "312";
+          lsp = true;
+          formatter = true;
+        };
+      };
+    };
+}
+```
+
+#### Per-System (Advanced)
+
+For more control over system-specific configurations:
 
 ```nix
 {
@@ -59,7 +87,7 @@ Add to your existing project's `flake.nix`:
       system = "x86_64-linux";  # or "x86_64-darwin", "aarch64-darwin"
     in {
       devShells.${system}.default = dev-templates.lib.${system}.mkDevShell {
-        python = {
+        lang.python = {
           enable = true;
           version = "312";
           lsp = true;
@@ -75,7 +103,7 @@ Add to your existing project's `flake.nix`:
 ### Python Module
 
 ```nix
-python = {
+lang.python = {
   enable = true;              # Enable Python environment
   version = "latest";         # "39", "310", "311", "312", "313", or "latest"
   withPip = true;            # Include pip (default: true)
@@ -90,7 +118,7 @@ python = {
 ### Nix Module
 
 ```nix
-nix = {
+lang.nix = {
   enable = true;                    # Enable Nix development tools
   lsp = "nil";                      # "nil", "nixd", or "none" (default: "nil")
   formatter = "nixpkgs-fmt";        # "nixpkgs-fmt", "alejandra", "nixfmt", or "none"
@@ -106,54 +134,51 @@ nix = {
 ### Python Web Development
 
 ```nix
-devShells.default = dev-templates.lib.${system}.mkDevShell {
-  python = {
-    enable = true;
-    version = "312";
-    lsp = true;
-    formatter = true;
-    withUv = true;
+dev-templates.lib.mkDevShells {
+  config = {
+    lang.python = {
+      enable = true;
+      version = "312";
+      lsp = true;
+      formatter = true;
+      withUv = true;
+    };
   };
-};
+}
 ```
 
 ### Nix Package Development
 
 ```nix
-devShells.default = dev-templates.lib.${system}.mkDevShell {
-  nix = {
-    enable = true;
-    lsp = "nil";
-    formatter = "alejandra";
-    withStatix = true;
-    withDeadnix = true;
+dev-templates.lib.mkDevShells {
+  config = {
+    lang.nix = {
+      enable = true;
+      lsp = "nil";
+      formatter = "alejandra";
+      withStatix = true;
+      withDeadnix = true;
+    };
   };
-};
+}
 ```
 
-### Override Python Version
+### Multi-Language Project
 
 ```nix
-devShells.default = dev-templates.lib.${system}.mkDevShell {
-  python = {
-    enable = true;
-    version = "311";  # Use Python 3.11 instead of latest
+dev-templates.lib.mkDevShells {
+  config = {
+    lang.python = {
+      enable = true;
+      version = "312";
+      lsp = true;
+    };
+    lang.nix = {
+      enable = true;
+      formatter = "alejandra";
+    };
   };
-};
-```
-
-### Custom Packages
-
-```nix
-devShells.default = dev-templates.lib.${system}.mkDevShell {
-  python = {
-    enable = true;
-    extraPackages = with pkgs; [
-      python3Packages.pytest
-      python3Packages.requests
-    ];
-  };
-};
+}
 ```
 
 ## Available Templates

@@ -11,22 +11,28 @@
     self,
     nixpkgs,
     flake-utils,
-    nix-ai-tools
-  }:
-    (flake-utils.lib.eachDefaultSystem (
+    nix-ai-tools,
+  }: let
+    inherit (nixpkgs) lib;
+    mkDevShellForSystem = system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+      import ./lib/mk-dev-shell.nix {
+        inherit pkgs nix-ai-tools;
+      };
+
+    eachSystemOutputs = flake-utils.lib.eachDefaultSystem (
       system: let
-        pkgs = nixpkgs.legacyPackages.${system};
+        mkDevShell = mkDevShellForSystem system;
       in {
         # Export the lib for other flakes to use
         lib = {
-          mkDevShell = import ./lib/mk-dev-shell.nix {
-            inherit pkgs nix-ai-tools;
-          };
+          inherit mkDevShell;
         };
 
         # Example dev shells for testing this flake directly
         devShells = {
-          default = self.lib.${system}.mkDevShell {
+          default = mkDevShell {
             automation.just.enable = true;
 
             assistant.opencode.enable = true;
@@ -38,16 +44,16 @@
             };
           };
 
-          python = self.lib.${system}.mkDevShell {
+          python = mkDevShell {
             lang.python.enable = true;
           };
 
-          nix = self.lib.${system}.mkDevShell {
+          nix = mkDevShell {
             lang.nix.enable = true;
           };
 
           # Python with full tooling
-          python-full = self.lib.${system}.mkDevShell {
+          python-full = mkDevShell {
             lang.python = {
               enable = true;
               lsp = true;
@@ -56,13 +62,13 @@
           };
 
           # Combined Python + Nix development
-          fullstack = self.lib.${system}.mkDevShell {
-            python = {
+          fullstack = mkDevShell {
+            lang.python = {
               enable = true;
               lsp = true;
               formatter = true;
             };
-            nix = {
+            lang.nix = {
               enable = true;
               formatter = "alejandra";
               withStatix = true;
@@ -70,8 +76,14 @@
           };
         };
       }
-    ))
-    // {
+    );
+  in
+    lib.recursiveUpdate eachSystemOutputs {
+      # System-agnostic helper for easy cross-platform flakes
+      lib.mkDevShells = import ./lib/mk-dev-shells.nix {
+        inherit nixpkgs nix-ai-tools;
+      };
+
       # Templates (not system-specific)
       templates = {
         python = {
